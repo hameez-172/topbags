@@ -312,16 +312,25 @@
 
         try {
 
-    const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbzpZl8mMnNaxQmbgMrFGUdVEMXJp5IoOhEXkriqhJ7VZ4lnuOJ0lmqfXeO8FyJz-XVH/exec",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        }
-    );
+    const formData = new FormData();
+
+for (const key in payload) {
+    formData.append(key, payload[key]);
+}
+
+const response = await fetch(
+    "https://script.google.com/macros/s/AKfycbw8c2dfZ_gPCCZ1f2tK0Qx1Iknn06tNmqBnUtswJ8UTnkOzir6Tknka35ecgCh6oB1J/exec",
+    {
+        method: "POST",
+        body: formData
+    }
+);
+
+const result = await response.json();
+
+if (!response.ok || !result.success) {
+    throw new Error("Order save failed");
+}
 
     const result = await response.json();
 
